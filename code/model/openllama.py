@@ -184,9 +184,11 @@ class OpenLLAMAPEFTModel(nn.Module):
             param.requires_grad = False
         self.visual_encoder.eval()
         print('Visual encoder initialized.')
-        # 释放临时内存
+        # 释放CPU内存
         del imagebind_ckpt
-        torch.cuda.empty_cache()
+        import gc
+        gc.collect()  # 强制Python垃圾回收
+        print('Visual encoder initialized. CPU内存释放完成')
 
     def init_language_decoder(self, ckpt_path):
         """分阶段加载语言解码器"""
@@ -208,8 +210,6 @@ class OpenLLAMAPEFTModel(nn.Module):
         self.llama_tokenizer.pad_token = self.llama_tokenizer.eos_token
         self.llama_tokenizer.padding_side = "right"
         print('Language decoder initialized.')
-        # 释放临时内存
-        torch.cuda.empty_cache()
 
     def init_auxiliary_modules(self):
         """初始化其他模块（投影层、提示学习器等）"""

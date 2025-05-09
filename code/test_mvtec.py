@@ -68,14 +68,12 @@ model.init_auxiliary_modules()
 print("加载Delta检查点...")
 delta_ckpt = torch.load(args['delta_ckpt_path'], map_location='cuda', mmap=True)
 model.load_state_dict(delta_ckpt, strict=False)
-del delta_ckpt
-torch.cuda.empty_cache()
+
 
 print("加载AnomalyGPT检查点...")
 anomaly_ckpt = torch.load(args['anomalygpt_ckpt_path'], map_location='cuda', mmap=True)
 model.load_state_dict(anomaly_ckpt, strict=False)
-del anomaly_ckpt
-torch.cuda.empty_cache()
+
 
 # 最终设置为评估模式
 model = model.eval()
